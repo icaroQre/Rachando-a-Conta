@@ -1,9 +1,15 @@
 import React from 'react'
 
-export default function ButtonPrimarySm({text}: Readonly<{text: string}>) {
+interface ButtonPrimarySmProps {
+  text: string;
+  type: 'submit' | 'reset' | 'button';
+  onClick?: () => void;
+}
+
+export default function ButtonPrimarySm({text, type}: ButtonPrimarySmProps) {
   return (
-    <div className='flex items-center justify-center bg-blue hover:bg-bluehover text-white p-4 rounded-lg cursor-pointer'>
+    <button type={type} className='flex items-center justify-center bg-blue hover:bg-bluehover text-white p-4 rounded-lg cursor-pointer'>
         <p className='text-2xl font-bold'>{text} →</p>
-    </div>
+    </button>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react';
 import React, { useState } from 'react'
 import Image from 'next/image'
 import ButtonAdd from '../components/ButtonAdd'
@@ -9,23 +10,44 @@ import { FaRegTrashAlt } from "react-icons/fa";
 
 export default function Bill() {
 
-  const [items, setItems] = useState<String[]>([""]);
+  
+  interface ItemType {
+    name: string;
+    quantity: number;
+    price: number;
+  }
+  
+  const [items, setItems] = useState<ItemType[]>([{name: "", quantity: 0, price: 0}]);
   const [friends, setFriends] = useState<string[]>([""]);
-
+  
   const addItem = () => {
-    setItems([...items, ""])
+    setItems([...items, { name: "", quantity: 0, price: 0 }])
   }
   const removeItem = (indexToRemove: number) =>{
     setItems((prevItems) => prevItems.filter((_, index) => index !== indexToRemove))
   }
-
+  const updateItemField = (index: number, field: string, newValue: string) => {
+    setItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems[index] = { ...updatedItems[index], [field]: newValue };
+      return updatedItems;
+    });
+  };
+  
   const addFriend = () => {
     setFriends([...friends, ""])
   }
   const removeFriend = (indexToRemove: number) =>{
     setFriends((prevItems) => prevItems.filter((_, index) => index !== indexToRemove))
   }
-
+  const updateFriend = (index: number, newValue: string) => {
+    setFriends((prevFriends) => {
+      const updatedFriends = [...prevFriends];
+      updatedFriends[index] = newValue;
+      return updatedFriends;
+    });
+  };  
+  
   return (
     <div className='flex flex-col items-start justify-center px-[10%] w-screen py-16 space-y-16'>
         <div className='flex flex-row items-center justify-center space-x-8'>
@@ -44,24 +66,27 @@ export default function Bill() {
             {items.map((item, index) => (
               <div key={index} className='flex flex-row items-end justify-center space-x-2'>
               <MyInput 
-                name='Nome do item' 
+                name='ItemName' 
                 label='Nome do item' 
-                value=''
-                placeholder='Ex: Cerveja' 
+                value={item.name}
+                placeholder='Ex: Cerveja'
+                onChange={(e) => updateItemField(index, 'name', e.target.value)}
               />
               <p className='font-bold text-primary'>X</p>
               <MyInput 
-                name='Nome do item' 
+                name='Quantity' 
                 label='Quantidade' 
-                value=''
+                value={item.quantity.toString()}
                 placeholder='Ex: 8' 
+                onChange={(e) => updateItemField(index, 'quantity', e.target.value)}
               />
               <p className='font-bold text-primary'>R$</p>
               <MyInput 
-                name='Nome do item' 
+                name='Price' 
                 label='Valor unitário' 
-                value=''
+                value={item.price.toString()}
                 placeholder='Ex: 10,00' 
+                onChange={(e) => updateItemField(index, 'price', e.target.value)}
               />
               <div onClick={() => removeItem(index)} className='flex items-center justify-center h-full pb-2'>
                 {index == 0 ? null :  <FaRegTrashAlt className='text-red text-3xl cursor-pointer'/>}
@@ -77,11 +102,11 @@ export default function Bill() {
             {friends.map((friend, index) => (
               <div key={index} className="flex flex-row items-end justify-center space-x-2">
               <MyInput 
-              name='Nome do item' 
+              name='FriendName' 
               label='Nome do participante' 
-              value=''
+              value={friend}
               placeholder='Ex: Rafael' 
-              />
+              onChange={(e) => {updateFriend(index, e.target.value)}}/>
 
               <div onClick={() => removeFriend(index)} className='flex items-center justify-center h-full pb-2'>
                 {index == 0 ? null :  <FaRegTrashAlt className='text-red text-3xl cursor-pointer'/>}
@@ -91,9 +116,12 @@ export default function Bill() {
             </div>
             <ButtonAdd onClick={addFriend} text='Adicionar participante'/>
           </div>
+          <button onClick={() => console.log(items, friends)} className='bg-blue hover:bg-bluehover text-white p-4 rounded-lg cursor-pointer'>
+            teste
+          </button>
         </div>
 
-        <ButtonPrimarySm text='Avançar'/>
+        <ButtonPrimarySm type='submit' text='Avançar'/>
     </div>
   )
 }
