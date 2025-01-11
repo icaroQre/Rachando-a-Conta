@@ -47,6 +47,26 @@ export default function Bill() {
       return updatedFriends;
     });
   };  
+
+    // Função para garantir que a quantidade seja numérica
+    const handleQuantityChange = (index: number, value: string) => {
+      const numericValue = value.replace(/\D/g, ''); // Remove caracteres não numéricos
+      updateItemField(index, 'quantity', numericValue ? parseInt(numericValue).toString() : '0');
+    };
+  
+    const handlePriceChange = (index: number, value: string) => {
+      // Remove caracteres não numéricos
+      let numericValue = value.replace(/\D/g, '');
+  
+      // Converte para número com duas casas decimais
+      if (numericValue) {
+        let formattedValue = (parseInt(numericValue) / 100).toFixed(2); // Exemplo: '100' vira '1.00'
+        updateItemField(index, 'price', formattedValue);
+      } else {
+        updateItemField(index, 'price', '0.00');
+      }
+    };
+  
   
   return (
     <div className='flex flex-col items-start justify-center px-[10%] w-screen py-16 space-y-16'>
@@ -77,16 +97,16 @@ export default function Bill() {
                 name='Quantity' 
                 label='Quantidade' 
                 value={item.quantity.toString()}
-                placeholder='Ex: 8' 
-                onChange={(e) => updateItemField(index, 'quantity', e.target.value)}
+                placeholder="Ex: 8"
+                onChange={(e) => handleQuantityChange(index, e.target.value)}
               />
               <p className='font-bold text-primary'>R$</p>
               <MyInput 
                 name='Price' 
                 label='Valor unitário' 
                 value={item.price.toString()}
-                placeholder='Ex: 10,00' 
-                onChange={(e) => updateItemField(index, 'price', e.target.value)}
+                placeholder="Ex: 10,00"
+                onChange={(e) => handlePriceChange(index, e.target.value)}
               />
               <div onClick={() => removeItem(index)} className='flex items-center justify-center h-full pb-2'>
                 {index == 0 ? null :  <FaRegTrashAlt className='text-red text-3xl cursor-pointer'/>}
@@ -116,11 +136,7 @@ export default function Bill() {
             </div>
             <ButtonAdd onClick={addFriend} text='Adicionar participante'/>
           </div>
-          <button onClick={() => console.log(items, friends)} className='bg-blue hover:bg-bluehover text-white p-4 rounded-lg cursor-pointer'>
-            teste
-          </button>
         </div>
-
         <ButtonPrimarySm type='submit' text='Avançar'/>
     </div>
   )
