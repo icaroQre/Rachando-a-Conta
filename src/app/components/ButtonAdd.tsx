@@ -1,9 +1,14 @@
 import React from 'react'
 
-export default function ButtonAdd({text}: Readonly<{text: string}>) {
+interface ButtonAddProps {
+  text: string;
+  onClick: () => void;
+}
+
+export default function ButtonAdd({text, onClick}: ButtonAddProps) {
   return (
-    <div className='flex items-center justify-center bg-green hover:bg-greenhover text-white p-2 rounded-lg cursor-pointer'>
+    <button onClick={onClick} className='flex items-center justify-center bg-green hover:bg-greenhover text-white p-2 rounded-lg cursor-pointer'>
         <p className='text-base font-bold'>{text} +</p>
-    </div>
+    </button>
   )
 }
