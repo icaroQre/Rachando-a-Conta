@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from 'next/link'
-import ButtonPrimaryLg from "./components/ButtonPrimaryLg";
 import ButtonPrimarySm from "./components/ButtonPrimarySm";
 
 export default function Home() {

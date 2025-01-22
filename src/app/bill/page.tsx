@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useState } from 'react'
 import Image from 'next/image'
 import ButtonAdd from '../components/ButtonAdd'
 import ButtonPrimarySm from '../components/ButtonPrimarySm'
@@ -18,20 +17,20 @@ export default function Bill() {
     setItems([
       ...items,
       {
-        id: items.length > 0 ? items[items.length - 1].id + 1 : 1,
+        id: items.length > 0 ? (parseInt(items[items.length - 1].id) + 1).toString() : '1',
         name: "",
         quantity: 0,
         price: 0
       }
     ]);
   }
-  const removeItem = (idToRemove: number) =>{
-    setItems((prevItems: BillItem[]) => prevItems.filter((item, index) => item.id !== idToRemove))
+  const removeItem = (idToRemove: string) =>{
+    setItems((prevItems: BillItem[]) => prevItems.filter((item) => item.id !== idToRemove.toString()))
   }
-  const updateItemField = (id: number, field: string, newValue: string) => {
+  const updateItemField = (id: string, field: string, newValue: string) => {
     setItems((prevItems: BillItem[]) => {
       // Encontra o índice do item com o ID fornecido
-      const index = prevItems.findIndex(item => item.id === id);
+      const index = prevItems.findIndex(item => item.id === id.toString());
       if (index === -1) {
         return prevItems;
       }
@@ -42,15 +41,15 @@ export default function Bill() {
     });
   };
 
-  const handleQuantityChange = (id: number, value: string) => {
+  const handleQuantityChange = (id: string, value: string) => {
     const numericValue = value.replace(/\D/g, '');
     updateItemField(id, 'quantity', numericValue ? parseInt(numericValue).toString() : '0');
   };
-  const handlePriceChange = (id: number, value: string) => {
-    let numericValue = value.replace(/\D/g, '');
+  const handlePriceChange = (id: string, value: string) => {
+    const numericValue = value.replace(/\D/g, '');
 
     if (numericValue) {
-      let formattedValue = (parseInt(numericValue) / 100).toFixed(2);
+      const formattedValue = (parseInt(numericValue) / 100).toFixed(2);
       updateItemField(id, 'price', formattedValue);
     } else {
       updateItemField(id, 'price', '0.00');
@@ -76,7 +75,7 @@ export default function Bill() {
     });
   };
 
-  const saveBill = (items: BillItem[], friends: string[]) => {
+  const saveBill = (items: BillItem[], friends: Friend[]) => {
     setItems(items)
     setFriends(friends)
   }
@@ -121,7 +120,7 @@ export default function Bill() {
                 onChange={(e) => handlePriceChange(item.id, e.target.value)}
               />
               <div onClick={() => removeItem(item.id)} className='flex items-center justify-center h-full pb-2'>
-                {item.id == 0 ? null :  <FaRegTrashAlt className='text-red text-3xl cursor-pointer'/>}
+                {parseInt(item.id) === 0 ? null :  <FaRegTrashAlt className='text-red text-3xl cursor-pointer'/>}
               </div>
             </div>
             ))}

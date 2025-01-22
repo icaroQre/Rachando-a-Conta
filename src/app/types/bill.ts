@@ -1,5 +1,5 @@
 export interface BillItem {
-    id: number;
+    id: string;
     name: string;
     quantity: number;
     price: number;

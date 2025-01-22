@@ -24,8 +24,8 @@ export default function Consumation() {
         const consumedBy: string[] = [];
         const checkboxes = document.querySelectorAll(`.checkbox-${item.id}`);
 
-        checkboxes.forEach((checkbox: any, index) => {
-          if (checkbox.checked) {
+        checkboxes.forEach((checkbox, index) => {
+          if ((checkbox as HTMLInputElement).checked) {
             consumedBy.push(friends[index].name);
           }
         });
