@@ -20,7 +20,7 @@ export default function Home() {
         </div>
       </div>
       <Link href={"/bill"}>
-        <ButtonPrimarySm text="Registrar Comanda" />
+        <ButtonPrimarySm text="Registrar Comanda" type={"button"} />
       </Link>
     </div>
   );
