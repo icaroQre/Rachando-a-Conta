@@ -25,19 +25,19 @@ export default function Total() {
         {friendConsume.map((friend: FriendConsume) => (
           <div
             key={friend.friendName}
-            className='p-4 border rounded-lg w-full bg-gray-50 shadow-sm'
+            className='p-4 border rounded-lg w-full bg-white shadow-sm'
           >
             <h2 className='text-xl font-semibold text-primary'>
               {friend.friendName}
             </h2>
-            <ul className='list-disc ml-6'>
+            <ul className='list-disc ml-6 text-primary'>
               {friend.consume.map((item: itemConsume) => (
                 <li key={item.itemName}>
                   {item.itemName}: R$ {item.valueToPay.toFixed(2)}
                 </li>
               ))}
             </ul>
-            <p className='font-bold mt-2'>
+            <p className='font-bold mt-2 text-rose-600'>
               Total: R$ {friend.total.toFixed(2)}
             </p>
           </div>
