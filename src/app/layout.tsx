@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { Nova_Round } from "next/font/google";
 import "./globals.css";
 import { BillProvider } from "./context/BillContext";
+import NavBar from "./components/NavBar";
+import HamburgerMenu from "./components/HamburguerMenu";
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
+const novaRound = Nova_Round({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -22,11 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${poppins.variable} antialiased`}
+        className={`${novaRound.variable} ${poppins.variable}  antialiased`}
       >
-        <BillProvider>
-        {children}
-        </BillProvider>
+        <NavBar />
+        <HamburgerMenu />
+        <BillProvider>{children}</BillProvider>
       </body>
     </html>
   );

@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useBill } from '../context/BillContext';
-import { BillItem, Friend, itemConsume, FriendConsume } from '../types/bill';
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useBill } from "../context/BillContext";
+import { BillItem, Friend, itemConsume, FriendConsume } from "../types/bill";
+import { useRouter } from "next/navigation";
+import Link from "next/dist/client/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function Consumation() {
-  
   const router = useRouter();
   const { items, friends, setFriendConsume } = useBill();
 
@@ -20,35 +22,39 @@ export default function Consumation() {
 
   const calculateItemConsume = (): Promise<itemConsume[]> => {
     return new Promise((resolve) => {
-      const updatedConsumption: itemConsume[] = expandedItems.map((item: BillItem) => {
-        const consumedBy: string[] = [];
-        const checkboxes = document.querySelectorAll(`.checkbox-${item.id}`);
+      const updatedConsumption: itemConsume[] = expandedItems.map(
+        (item: BillItem) => {
+          const consumedBy: string[] = [];
+          const checkboxes = document.querySelectorAll(`.checkbox-${item.id}`);
 
-        checkboxes.forEach((checkbox, index) => {
-          if ((checkbox as HTMLInputElement).checked) {
-            consumedBy.push(friends[index].name);
-          }
-        });
+          checkboxes.forEach((checkbox, index) => {
+            if ((checkbox as HTMLInputElement).checked) {
+              consumedBy.push(friends[index].name);
+            }
+          });
 
-        const perPersonValue =
-          consumedBy.length > 0
-            ? parseFloat((item.price / consumedBy.length).toFixed(2))
-            : 0;
+          const perPersonValue =
+            consumedBy.length > 0
+              ? parseFloat((item.price / consumedBy.length).toFixed(2))
+              : 0;
 
-        return {
-          itemName: item.name,
-          itemPrice: item.price,
-          consumedBy,
-          valueToPay: perPersonValue,
-        };
-      });
+          return {
+            itemName: item.name,
+            itemPrice: item.price,
+            consumedBy,
+            valueToPay: perPersonValue,
+          };
+        }
+      );
 
-      console.log('Items Calculados: ', updatedConsumption);
+      console.log("Items Calculados: ", updatedConsumption);
       resolve(updatedConsumption);
     });
   };
 
-  const calculateFriendConsume = (updatedConsumption: itemConsume[]): Promise<void> => {
+  const calculateFriendConsume = (
+    updatedConsumption: itemConsume[]
+  ): Promise<void> => {
     return new Promise((resolve) => {
       const friendConsumptionMap: { [key: string]: FriendConsume } = {};
 
@@ -78,67 +84,82 @@ export default function Consumation() {
       });
 
       setFriendConsume(updatedFriendConsume);
-      console.log('FriendConsume atualizado:', updatedFriendConsume);
+      console.log("FriendConsume atualizado:", updatedFriendConsume);
       resolve();
     });
   };
 
   const handleNext = async () => {
-    console.log('Iniciando cálculo...');
+    console.log("Iniciando cálculo...");
     const updatedConsumption = await calculateItemConsume();
     await calculateFriendConsume(updatedConsumption);
-    router.push('/total');
+    router.push("/total");
   };
 
   return (
-    <div className='flex flex-col items-start justify-start space-y-16 py-[5%] px-[10%] w-screen'>
-      <div className='flex flex-row items-center justify-center space-x-8'>
-        <h2 className='text-3xl text-primary font-bold'>Dividindo</h2>
-        <Image
-          src={'/calculator.png'}
-          alt={'Calculator Image'}
-          width={32}
-          height={32}
-        />
-      </div>
-      <div className='flex flex-col items-start justify-center space-y-8'>
-        <h2 className='text-2xl font-bold text-primary'>Quem consumiu?</h2>
-        {expandedItems.map((item: BillItem) => (
-          <div
-            key={item.id}
-            className='flex flex-col items-start justify-center space-y-8'
-          >
-            <div className='flex items-center justify-center flex-row space-x-2 bg-primary text-lg text-white p-2 rounded-lg cursor-pointer'>
-              <div className='font-bold'> {item.name} </div>
-              <div className='font-light'> R${item.price} </div>
-            </div>
-            <div className='grid grid-cols-4 auto-rows-auto gap-8 items-start justify-start'>
-              {friends.map((friend: Friend) => (
-                <div
-                  key={`${item.id}-${friend.id}`}
-                  className='flex flex-row items-center justify-start space-x-2'
-                >
-                  <label
-                    htmlFor={`checkbox-${item.id}-${friend.id}`}
-                    className='font-bold text-primary text-base'
+    <div className="flex items-center justify-center w-full">
+      <div className="flex flex-col items-start justify-between space-y-16 my-[15vh] px-5">
+        <div className="flex items-center justify-center flex-row gap-4 mb-4 md:mb-8">
+          <h1 className="text-text-primary font-bold text-2xl">
+            Quam Consumiu?
+          </h1>
+          <Image
+            src="/calculator.png"
+            width={24}
+            height={24}
+            alt="Registrnado"
+          />
+        </div>
+        <div className="flex flex-col items-start justify-center space-y-8 h-full">
+          {expandedItems.map((item: BillItem) => (
+            <div
+              key={item.id}
+              className="flex flex-col md:flex-row items-start justify-center gap-8"
+            >
+              <Badge>
+                <p className="mr-4 text-lg cursor-pointer">{item.name}</p>
+                <p className="font-light text-lg cursor-pointer">
+                  R$: {item.price}
+                </p>
+              </Badge>
+              <div className="grid grid-cols-4 auto-rows-auto gap-8 items-start justify-start">
+                {friends.map((friend: Friend) => (
+                  <div
+                    key={`${item.id}-${friend.id}`}
+                    className="flex flex-row items-center justify-start space-x-2"
                   >
-                    {friend.name}
-                  </label>
-                  <input
-                    type='checkbox'
-                    id={`checkbox-${item.id}-${friend.id}`}
-                    className={`checkbox-${item.id}`}
-                  />
-                </div>
-              ))}
+                    <label
+                      htmlFor={`checkbox-${item.id}-${friend.id}`}
+                      className="text-text-primary font-medium text-base"
+                    >
+                      {friend.name}
+                    </label>
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${item.id}-${friend.id}`}
+                      className={`checkbox-${item.id} cursor-pointer`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-        <button
-          className='flex items-center justify-center bg-blue hover:bg-bluehover text-white p-4 rounded-lg cursor-pointer text-2xl font-bold'
-          onClick={handleNext}>
-          Avançar →
-        </button>
+          ))}
+        </div>
+        <div className="flex flex-row items-center gap-4 w-full">
+          <Link href="/bill">
+            <Button variant={"destructive"} size={"lg"}>
+              Voltar
+            </Button>
+          </Link>
+          <Button
+            onClick={handleNext}
+            variant={"default"}
+            size={"lg"}
+            className="bg-green hover:bg-greenhover"
+          >
+            Avançar
+          </Button>
+        </div>
       </div>
     </div>
   );
