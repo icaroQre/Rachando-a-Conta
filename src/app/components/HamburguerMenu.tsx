@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 const HamburgerMenu = () => {
-  const [visible, setVisible] = useState<Boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
   const toogleMenu = () => {
     setVisible(!visible);
   };

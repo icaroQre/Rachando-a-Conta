@@ -1,24 +1,12 @@
 "use client";
-import { Plus, Trash, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import ButtonAdd from "../components/ButtonAdd";
-import ButtonPrimarySm from "../components/ButtonPrimarySm";
-import MyInput from "../components/MyInput";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { useBill } from "../context/BillContext";
 import Link from "next/link";
 import { BillItem, Friend } from "../types/bill";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 
 export default function Bill() {
   const { items, setItems, friends, setFriends } = useBill();

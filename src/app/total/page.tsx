@@ -7,7 +7,6 @@ import { FriendConsume, itemConsume } from "../types/bill";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 import Link from "next/dist/client/link";
-import { Badge } from "@/components/ui/badge";
 
 export default function Total() {
   const { friendConsume } = useBill();
